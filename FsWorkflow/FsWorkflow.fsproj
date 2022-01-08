@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="BasicWF.fs" />
+    <Compile Include="TicTacToe.fs" />
+    <Compile Include="TicTacToeWF.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
