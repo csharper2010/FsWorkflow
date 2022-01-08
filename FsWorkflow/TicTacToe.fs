@@ -30,7 +30,8 @@ let getRows (TicTacToeBoard state) =
     state |> Seq.indexed |> Seq.chunkBySize 3
 
 let startGame () = Playing { Next = X; Board = TicTacToeBoard.createNew }
-let getLines (cells : List<Option<Player>>) =
+
+let private getLines (cells : List<Option<Player>>) =
     seq {
         for startIndex in 0..3..8 do
             yield cells[startIndex..startIndex+2]
