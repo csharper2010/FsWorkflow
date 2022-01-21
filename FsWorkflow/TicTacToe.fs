@@ -5,6 +5,7 @@ type Player =
     | O
 
 type TicTacToeBoard = private TicTacToeBoard of List<Option<Player>>
+
 module TicTacToeBoard =
     let createNew = TicTacToeBoard (List.replicate 9 None)
     let updateWith player pos (TicTacToeBoard state) = 

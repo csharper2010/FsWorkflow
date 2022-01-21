@@ -6,13 +6,14 @@ open Printf;
 let message (msg : string) = printfn "%s" msg
 
 let inputBox msg map =
-    message msg
-    seq {
-        while true do yield Console.ReadLine()
-    }
-    |> Seq.map map 
-    |> Seq.choose id
-    |> Seq.head
+    let rec loop () =
+        message msg
+        let result = Console.ReadLine() |> map
+        match result with
+        | Some value -> value
+        | None -> loop()
+
+    loop ()        
 
 let stringInputBox msg = 
     inputBox msg (fun x -> if String.IsNullOrEmpty(x) then None else Some x)

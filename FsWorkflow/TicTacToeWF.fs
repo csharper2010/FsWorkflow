@@ -17,25 +17,25 @@ type Move =
     | Cell of int
     | Cancel
 
-let ticTacToeGame () = 
-    let mutable game = startGame()
-    let mutable gameFinished = false
-    while not gameFinished do
-        gameFinished <-
-            match game with 
+let ticTacToeGame () =
+    let rec loop state =
+        System.Console.Clear()
+        printfn "TicTacToe"
+        let (nextState, result) = 
+            match state with 
             | Finished finished ->
                 showBoard finished.Board
                 match finished.Winner with
                 | Some player -> message $"Player %A{player} won!"
                 | None -> message "There was no winner!"
-                true
+                (state, Some ())
             | Playing playing ->
                 showBoard playing.Board
                 let nextMove = 
                     inputBox
-                        $"""What's %A{playing.Next}'s next move?
-                        [1]-[9] for selected cell
-                        [C] to cancel game""" 
+                        $"What's %A{playing.Next}'s next move?\n\
+                        [1]-[9] for selected cell\n\
+                        [C] to cancel game"
                         (fun s -> 
                             match System.Int32.TryParse s with
                             | (true, i) 
@@ -48,13 +48,23 @@ let ticTacToeGame () =
                             | _ -> None)
                 match nextMove with
                 | Cell c -> 
-                    game <- game |> move playing.Next c
-                    false
-                | Cancel -> true
+                    (state |> move playing.Next c, None)
+                | Cancel -> 
+                    (state, Some ())
+
+        match result with 
+        | Some value -> value
+        | None -> loop nextState
+
+    loop <| startGame()
 
 let ticTacToe () = 
-    let mutable c = true
-    while c do
+    let rec loop () =
         ticTacToeGame ()
-        c <- match messageBoxYesNo "Do you want to play another game?" with | Yes -> true | No -> false
-        
+        let finished = match messageBoxYesNo "Do you want to play another game?" with | Yes -> None | No -> Some ()
+
+        match finished with
+        | Some value -> value
+        | None -> loop ()
+    
+    loop ()
